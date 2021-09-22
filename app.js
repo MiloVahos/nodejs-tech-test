@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const app = express()
+const sequelize = require('./src/config/db')
 
 app.use(express.urlencoded({ extended: true }))
 
@@ -9,6 +10,6 @@ app.get('/', function(req, res) {
 });
 
 const server = http.createServer(app)
-server.listen(3000, () => {
-  console.log('Server running on port 3000')
+server.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`)
 })
