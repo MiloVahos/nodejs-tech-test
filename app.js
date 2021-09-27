@@ -1,12 +1,13 @@
 const http = require('http')
 const express = require('express')
 const app = express()
-const sequelize = require('./src/config/db')
+const mainRouter = require('./src/components/index')
 
 app.use(express.urlencoded({ extended: true }))
+app.use('/', mainRouter)
 
 app.get('/', function(req, res) {
-  res.send('hello world');
+  res.send('Lean Tech Test Route');
 });
 
 const server = http.createServer(app)
