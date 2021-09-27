@@ -1,9 +1,15 @@
 const { Router } = require('express')
 const { createUser } = require('../users/controllers/UserController')
+const { validateSchemaBody } = require('../utils/Validators')
+const createUserSchema = require('./schemas/createUserSchema')
 
 const router = Router()
 
-router.post('/', createUser)
+router.post(
+  '/',
+  validateSchemaBody(createUserSchema),
+  createUser
+)
 
 router.get('', () => 'null')
 
