@@ -1,16 +1,23 @@
 const http = require('http')
 const express = require('express')
 const app = express()
-const mainRouter = require('./src/components/index')
+const helment = require('helmet')
+const compression = require('compression')
+const mainRouter = require('./src/components/MainRouter')
+const sequelize = require('./src/config/db')
 
+app.use(helment())
+app.use(compression())
 app.use(express.urlencoded({ extended: true }))
-app.use('/', mainRouter)
-
-app.get('/', function(req, res) {
-  res.send('Lean Tech Test Route');
-});
+app.use(express.json())
+app.use('', mainRouter)
 
 const server = http.createServer(app)
-server.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`)
-})
+sequelize.authenticate().then(() => {
+  console.log('Connection to the database has been established successfully');
+  server.listen(process.env.PORT || 3000, () => {
+    console.log(`Server running on port ${process.env.PORT || 3000}`)
+  })
+}).catch((err) => {
+  console.log('Unable to connect to the database:', err);
+});
