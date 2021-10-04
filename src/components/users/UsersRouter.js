@@ -1,17 +1,23 @@
 const { Router } = require('express')
-const { createUser } = require('../users/controllers/UserController')
-const { validateSchemaBody } = require('../utils/Validators')
+const { createUser, getUser } = require('../users/controllers/UserController')
+const { validateSchemaBody, vali, validateSchemaParams } = require('../../utils/Validators')
+const { catchErrors } = require('../../utils/ErrorHandler')
 const createUserSchema = require('./schemas/createUserSchema')
+const idSchema = require('./schemas/idSchema')
 
 const router = Router()
 
 router.post(
   '/',
   validateSchemaBody(createUserSchema),
-  createUser
+  catchErrors(createUser)
 )
 
-router.get('', () => 'null')
+router.get(
+  '/:id',
+  validateSchemaParams(idSchema),
+  catchErrors(getUser)
+)
 
 router.put('', () => null)
 

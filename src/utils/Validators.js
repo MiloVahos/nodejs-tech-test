@@ -1,4 +1,3 @@
-const joi = require('joi')
 const boom = require('@hapi/boom')
 
 const joiValidation = (data, schema) => {
@@ -17,4 +16,15 @@ const validateSchemaBody = (schema) => {
   }
 }
 
-module.exports = { validateSchemaBody }
+const validateSchemaParams = (schema) => {
+  return function (req, res, next) {
+    const error = joiValidation(req.params, schema)
+    if (error) {
+      res.status(boom.badRequest().output.statusCode).json({ message: error.message })
+    } else {
+      next()
+    }
+  }
+}
+
+module.exports = { validateSchemaBody, validateSchemaParams }
