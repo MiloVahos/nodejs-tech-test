@@ -1,15 +1,28 @@
-const { createNewUser, getUserById } = require('../services/UserService')
+const { createUser, getUser, updateUser, deleteUser } = require('../services/UserService')
 
-const createUser = async (req, res) => {
+const postUser = async (req, res) => {
   const user = req.body
-  const newUser = await createNewUser(user)
-  res.status(200).json(newUser)
+  const response = await createUser(user)
+  res.status(200).json(response)
 }
 
-const getUser = async (req, res) => {
+const getUserById = async (req, res) => {
   const id = req.params.id
-  const user = await getUserById(id)
-  res.status(200).json(user)
+  const response = await getUser(id)
+  res.status(200).json(response)
 }
 
-module.exports = { createUser, getUser }
+const putUserById = async (req, res) => {
+  const id = req.params.id
+  const updateUserData = req.body
+  const response = await updateUser(id, updateUserData)
+  res.status(200).json(response)
+}
+
+const deleteUserById = async (req, res) => {
+  const id = req.params.id
+  const response = await deleteUser(id)
+  res.status(200).json(response)
+}
+
+module.exports = { postUser, getUserById, putUserById, deleteUserById }
