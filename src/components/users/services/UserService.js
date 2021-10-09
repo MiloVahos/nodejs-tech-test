@@ -29,7 +29,8 @@ const authUser = async (userData) => {
   if (!user) return { auth: false }
   const validPass = bcrypt.compareSync(password, user.password);
   if (!validPass) return { auth: false }
-  return { auth: true }
+  delete user.password
+  return { auth: true, user }
 }
 
 const updateUser = async (id, updateUserData) => {
