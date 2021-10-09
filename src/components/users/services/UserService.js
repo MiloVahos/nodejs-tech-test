@@ -1,15 +1,35 @@
-const { saveUser, getUserById, updateUserById, deleteUserById } = require('../dao/UserDao')
+const { saveUser, getUserById, getUserByEmail, updateUserById, deleteUserById } = require('../dao/UserDao')
 const boom = require('@hapi/boom')
+const bcrypt = require('bcrypt')
 
 const createUser = async (user) => {
-  const newUser = await saveUser(user)
-  return newUser
+  const { password } = user
+  const currentUser = await getUserByEmail(user.email)
+  if (currentUser) throw boom.badRequest('User email already exists')
+  try {
+    const hash = bcrypt.hashSync(password, 10)
+    user.password = hash
+    const newUser = await saveUser(user)
+    delete newUser.password
+    return newUser
+  } catch (e) {
+    throw boom.badImplementation('Something went wrong with the application')
+  }
 }
 
 const getUser = async (id) => {
   const user = await getUserById(id)
   if (!user) throw boom.notFound(`User with id ${id} not found`)
   return user
+}
+
+const authUser = async (userData) => {
+  const { email, password } = userData
+  const user = await getUserByEmail(email)
+  if (!user) return { auth: false }
+  const validPass = bcrypt.compareSync(password, user.password);
+  if (!validPass) return { auth: false }
+  return { auth: true }
 }
 
 const updateUser = async (id, updateUserData) => {
@@ -24,4 +44,4 @@ const deleteUser = async (id) => {
   return { message: `User with id ${id} was deleted`}
 }
 
-module.exports = { createUser, getUser, updateUser, deleteUser }
+module.exports = { createUser, getUser, updateUser, deleteUser, authUser }

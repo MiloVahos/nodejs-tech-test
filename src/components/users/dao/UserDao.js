@@ -11,6 +11,12 @@ const getUserById = async (id) => {
   return await userModel.get({ plain: true })
 }
 
+const getUserByEmail = async (email) => {
+  const userModel = await User.findOne({ where: { email }})
+  if (!userModel) return null
+  return await userModel.get({ plain: true })
+}
+
 const updateUserById = async (id, updateUserData) => {
   const userModel = await User.findOne({ where: { id }})
   if (!userModel) return null
@@ -25,4 +31,4 @@ const deleteUserById = async (id) => {
   return true
 }
 
-module.exports = { saveUser, getUserById, updateUserById, deleteUserById }
+module.exports = { saveUser, getUserById, getUserByEmail, updateUserById, deleteUserById }
