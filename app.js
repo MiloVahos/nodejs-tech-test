@@ -1,4 +1,4 @@
-const http = require('http')
+const https = require('https')
 const express = require('express')
 const app = express()
 const helment = require('helmet')
@@ -42,7 +42,7 @@ mqttClient.on('message', function (topic, message) {
 // subscribe to topic 'my/test/topic'
 mqttClient.subscribe('lean/test')
 
-const server = http.createServer(app)
+const server = https.createServer(app)
 sequelize.authenticate().then(() => {
   console.log('Connection to the database has been established successfully');
   server.listen(process.env.PORT || 3000, () => {
